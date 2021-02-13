@@ -73,9 +73,6 @@ def evaluate(loader,optThresh=0.5,testMode=False,plot=False,mode='Valid',post=Fa
         acc_sample = acc_sample.cpu().data.numpy()
         print("Min.%.4f [%d]"%(acc_sample.min(),np.argmin(acc_sample)))
         print("Max.%.4f [%d]"%(acc_sample.max(),np.argmax(acc_sample)))
-        if args.nuseg:
-            idx = [2,8]
-            print("2:%.4f,8:%.4f"%(acc_sample[idx[0]],acc_sample[idx[1]]))
 
     print(mode+" Acc: %.2f +/- %.2f"%(acc_,acc_std))
 
@@ -83,16 +80,9 @@ def evaluate(loader,optThresh=0.5,testMode=False,plot=False,mode='Valid',post=Fa
     vl_loss = vl_loss/len(loader)
     
     if plot:
-            if args.nuseg:
-                k = 8
-                tmp =  torch.zeros(k,3,H,W).to(device)
-                idx = list(np.arange(k))
-                preds = torch.Tensor(predsNp[idx]).to(device)
-                labels = torch.Tensor(labelsNp[idx]).to(device)
-            else:
-                k = 32
-                k = (labels.shape[0] if labels.shape[0] < k else k)
-                tmp =  torch.zeros(k,3,H,W).to(device)
+            k = 32
+            k = (labels.shape[0] if labels.shape[0] < k else k)
+            tmp =  torch.zeros(k,3,H,W).to(device)
             pred =  ((preds[:k].view(-1,H,W) >= optThresh).float() \
                     + 2*labels[:k])
             ### FN
@@ -125,9 +115,7 @@ parser.add_argument('--l2', type=float, default=0, help='L2 regularisation')
 parser.add_argument('--p', type=float, default=0.5, help='Augmentation probability')
 parser.add_argument('--aug', action='store_true', default=False, help='Use data augmentation')
 parser.add_argument('--save', action='store_true', default=False, help='Save model')
-parser.add_argument('--cxr', action='store_true', default=False, help='Use the Lung CXR data.')
-parser.add_argument('--nuseg', action='store_true', default=False, help='Use the MO-nuclei seg. dataset')
-parser.add_argument('--data_path', type=str, default='lidc/',help='Path to data.')
+parser.add_argument('--data_path', type=str, default='data/lungCXR/',help='Path to data.')
 parser.add_argument('--bond_dim', type=int, default=2, help='MPS Bond dimension')
 parser.add_argument('--kernel', type=int, default=4, help='Stride of squeeze kernel')
 parser.add_argument('--seed', type=int, default=1, help='Random seed')
@@ -158,26 +146,14 @@ else:
     trans_train = trans_valid
     print("No augmentation....")
    
-if args.cxr:
-    print("Using Lung CXR dataset")
-    print("Using Fold: %d"%args.fold)
-    dataset_valid = lungCXR(split='Valid', data_dir=args.data_path, 
-                        transform=trans_valid,fold=args.fold)
-    dataset_train = lungCXR(split='Train', data_dir=args.data_path,fold=args.fold, 
-                                    transform=trans_train)
-    dataset_test = lungCXR(split='Test', data_dir=args.data_path,fold=args.fold,
-                    transform=trans_valid)
-elif args.nuseg:
-    print("Using MONuSeg dataset")
-    dataset_valid = MoNuSeg(split='Valid', data_dir=args.data_path, 
-                        transform=trans_valid)
-    dataset_train = MoNuSeg(split='Train', data_dir=args.data_path,
-                                        transform=trans_train)
-    dataset_test = MoNuSeg(split='Test', data_dir=args.data_path,
-                        transform=trans_valid)
-else:
-    print("Choose a dataset!")
-    sys.exit()
+print("Using Lung CXR dataset")
+print("Using Fold: %d"%args.fold)
+dataset_valid = lungCXR(split='Valid', data_dir=args.data_path, 
+                    transform=trans_valid,fold=args.fold)
+dataset_train = lungCXR(split='Train', data_dir=args.data_path,fold=args.fold, 
+                                transform=trans_train)
+dataset_test = lungCXR(split='Test', data_dir=args.data_path,fold=args.fold,
+                transform=trans_valid)
 
 # Initiliaze input dimensions
 dim = torch.ShortTensor(list(dataset_valid[0][0].shape[1:]))
@@ -215,10 +191,7 @@ model = model.to(device)
 
 # Initialize loss and metrics
 accuracy = dice
-if args.cxr:
-    loss_fun = dice_loss()
-else:
-    loss_fun = torch.nn.BCELoss(reduction='mean')
+loss_fun = dice_loss()
 
 # Initialize optimizer
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, 
