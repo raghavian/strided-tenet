@@ -115,7 +115,7 @@ parser.add_argument('--l2', type=float, default=0, help='L2 regularisation')
 parser.add_argument('--p', type=float, default=0.5, help='Augmentation probability')
 parser.add_argument('--aug', action='store_true', default=False, help='Use data augmentation')
 parser.add_argument('--save', action='store_true', default=False, help='Save model')
-parser.add_argument('--data_path', type=str, default='data/lungCXR/',help='Path to data.')
+parser.add_argument('--data', type=str, default='data/lungCXR/',help='Path to data.')
 parser.add_argument('--bond_dim', type=int, default=2, help='MPS Bond dimension')
 parser.add_argument('--kernel', type=int, default=4, help='Stride of squeeze kernel')
 parser.add_argument('--seed', type=int, default=1, help='Random seed')
@@ -148,11 +148,11 @@ else:
    
 print("Using Lung CXR dataset")
 print("Using Fold: %d"%args.fold)
-dataset_valid = lungCXR(split='Valid', data_dir=args.data_path, 
+dataset_valid = lungCXR(split='Valid', data_dir=args.data, 
                     transform=trans_valid,fold=args.fold)
-dataset_train = lungCXR(split='Train', data_dir=args.data_path,fold=args.fold, 
+dataset_train = lungCXR(split='Train', data_dir=args.data,fold=args.fold, 
                                 transform=trans_train)
-dataset_test = lungCXR(split='Test', data_dir=args.data_path,fold=args.fold,
+dataset_test = lungCXR(split='Test', data_dir=args.data,fold=args.fold,
                 transform=trans_valid)
 
 # Initiliaze input dimensions

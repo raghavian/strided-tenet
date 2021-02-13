@@ -15,7 +15,7 @@ This is the official Pytorch implementation of
 * Tested on Pytorch 1.6, Python 3.6 
 * The preprocessed lungCXR data is provided as an archive. Unzip and point that as the data_dir.
 * Train the model from scratch: 
-python train.py --data_dir data/lungCXR --cxr 
+python train.py --data data/lungCXR 
 
 
 ### Usage guidelines ###
