@@ -26,7 +26,7 @@ python train.py --data_dir data/lungCXR --cxr
  	title={Segmenting two-dimensional structures with strided tensor networks},
 	author={Raghavendra Selvan and Erik B. Dam and Jens Petersen},
 	booktitle={27th international conference on Information Processing in Medical Imaging (IPMI)},
-	month={June},
+	month={Feb},
  	note={arXiv preprint arXiv:2020.2005.10052},
 	year={2021}}
 ```
