@@ -1,7 +1,7 @@
 # README #
 
 This is the official Pytorch implementation of 
-"[Segmenting two-dimensional structures with strided tensor networks](https://arxiv.org/abs/2005.10052)", Raghavendra Selvan et al. 2021
+"[Segmenting two-dimensional structures with strided tensor networks](https://arxiv.org/abs/2102.06900)", Raghavendra Selvan et al. 2021
 
 ![lotenet](models/model.png)
 ### What is this repository for? ###
@@ -27,10 +27,9 @@ python train.py --data data/lungCXR
 	author={Raghavendra Selvan and Erik B. Dam and Jens Petersen},
 	booktitle={27th international conference on Information Processing in Medical Imaging (IPMI)},
 	month={Feb},
- 	note={arXiv preprint arXiv:2020.2005.10052},
+ 	note={arXiv preprint arXiv:2102.06900},
 	year={2021}}
 ```
-
 ### Who do I talk to? ###
 
 * raghav@di.ku.dk
