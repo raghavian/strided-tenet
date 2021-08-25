@@ -357,7 +357,8 @@ def dice(labels,preds,test=False):
      labels = labels.view(b,-1)
      preds = preds.view(b,-1)
      preds_bin = (preds > 0.5).type_as(labels)
-     acc = 2. * (torch.sum(preds_bin * labels,dim=1) + EPS)/ (preds_bin.sum(1) + labels.sum(1)+EPS)
+     acc = 2. * (torch.sum(preds_bin * labels,dim=1))/ (preds_bin.sum(1) + labels.sum(1))
+     acc[acc.isnan()] = 0
      if test:
         return acc.mean(), acc
      else:
